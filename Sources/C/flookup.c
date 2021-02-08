@@ -113,7 +113,7 @@ void app_print(char *result) {
     }
 }
 
-int main(int argc, char *argv[]) {
+int flookup_main(int argc, char *argv[]) {
     int opt, sortarcs = 1;
     char *infilename;
     struct fsm *net;
