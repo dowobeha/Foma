@@ -15,6 +15,8 @@
 /*   See the License for the specific language governing permissions and       */
 /*   limitations under the License.                                            */
 
+#include <inttypes.h>
+
 struct state_array {
     struct fsm_state *transitions;
 };
