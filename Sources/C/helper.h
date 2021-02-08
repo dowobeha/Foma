@@ -5,8 +5,8 @@
 //  Created by Lane Schwartz on 2021-02-08.
 //
 
-#ifndef File_h
-#define File_h
+#ifndef helper_h
+#define helper_h
 
 #include <stdbool.h>
 

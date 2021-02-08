@@ -5,8 +5,8 @@
 //  Created by Lane Schwartz on 2021-02-08
 //
 
-#ifndef fomalib_h
-#define fomalib_h
+#ifndef demo_h
+#define demo_h
 
 int answer(int x);
 
