@@ -5,7 +5,6 @@
 //  Created by Lane Schwartz on 2021-02-08
 //
 
-#include "foma.h"
 
 int answer(int x) {
     
@@ -19,3 +18,4 @@ int answer(int x) {
     
     return result;
 }
+
