@@ -1,0 +1,12 @@
+//
+//  module.modulemap
+//  Foma
+//
+//  Created by Lane Schwartz on 2021-02-08
+//
+
+framework module Foma {
+    header "fomalib.h"
+    
+    private header "foma.h"
+}
