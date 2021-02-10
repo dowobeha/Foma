@@ -1,3 +1,4 @@
 # Foma
 
-A description of this package.
+A [Swift](https://swift.org) wrapper for [foma](https://github.com/mhulden/foma/tree/master/foma).
+
