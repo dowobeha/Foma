@@ -13,10 +13,6 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-      Package.Dependency.package( // Needed for Swift package manager to see zlib
-        url: "https://github.com/apple/swift-nio-zlib-support.git",
-        from: "1.0.0"
-      )
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
