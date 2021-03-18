@@ -8,26 +8,21 @@ public class FST {
     public static var deffHandle = defined_functions_init()
     
     public init?(fromBinary binaryFilename: String) {
-
-        self.fsmPointer = binaryFilename.withCString { (binaryFilenameAsCString:UnsafePointer<CChar>) -> UnsafeMutablePointer<fsm> in
-            return fsm_read_binary_file(UnsafeMutablePointer<CChar>(mutating: binaryFilenameAsCString))
+            
+        let possiblyNullPointer: UnsafeMutablePointer<fsm>? = binaryFilename.withCString { (binaryFilenameAsCString:UnsafePointer<CChar>) -> UnsafeMutablePointer<fsm>? in
+            if let result = fsm_read_binary_file(UnsafeMutablePointer<CChar>(mutating: binaryFilenameAsCString)) {
+                return result
+            } else {
+                return nil
+            }
         }
         
-       // self.fsmPointer = pointer
-        /*
-        if let pointer = fsm_read_binary_file(binaryFilename.unsafeMutablePointer()) {
+        if let pointer = possiblyNullPointer {
             self.fsmPointer = pointer
         } else {
             return nil
         }
- */
-/*
-        if let handle = apply_init(fsmPointer) {
-            self.applyHandle = handle
-        } else {
-            return nil
-        }
- */
+        
     }
     
     private init(fromPointer unsafeMutablePointer: UnsafeMutablePointer<fsm>) {
