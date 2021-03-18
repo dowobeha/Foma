@@ -4,13 +4,23 @@ public class FST {
     private var fsmPointer : UnsafeMutablePointer<fsm>
     //private var applyHandle: UnsafeMutablePointer<apply_handle>
     
+    public static var defHandle = defined_networks_init()
+    public static var deffHandle = defined_functions_init()
+    
     public init?(fromBinary binaryFilename: String) {
 
+        self.fsmPointer = binaryFilename.withCString { (binaryFilenameAsCString:UnsafePointer<CChar>) -> UnsafeMutablePointer<fsm> in
+            return fsm_read_binary_file(UnsafeMutablePointer<CChar>(mutating: binaryFilenameAsCString))
+        }
+        
+       // self.fsmPointer = pointer
+        /*
         if let pointer = fsm_read_binary_file(binaryFilename.unsafeMutablePointer()) {
             self.fsmPointer = pointer
         } else {
             return nil
         }
+ */
 /*
         if let handle = apply_init(fsmPointer) {
             self.applyHandle = handle
@@ -38,17 +48,21 @@ public class FST {
                 apply_clear(applyHandle)
             }
             var results = [String]()
-            if let firstResult: UnsafeMutablePointer<CChar> = applyFunction(applyHandle, string.unsafeMutablePointer()) {
-                results.append(String(cString: firstResult))
-                
-                let nullPointer = UnsafeMutablePointer<CChar>(nil)
-                while let nextResult: UnsafeMutablePointer<CChar> = applyFunction(applyHandle, nullPointer) {
-                    results.append(String(cString: nextResult))
+            
+            let result = string.withCString  { (cString:UnsafePointer<CChar>) -> Result? in
+                if let firstResult: UnsafeMutablePointer<CChar> = applyFunction(applyHandle, UnsafeMutablePointer<CChar>(mutating: cString)) {
+                    results.append(String(cString: firstResult))
+                    
+                    let nullPointer = UnsafeMutablePointer<CChar>(nil)
+                    while let nextResult: UnsafeMutablePointer<CChar> = applyFunction(applyHandle, nullPointer) {
+                        results.append(String(cString: nextResult))
+                    }
+                    return Result(input: string, outputs: results)
+                } else {
+                    return nil
                 }
-                return Result(input: string, outputs: results)
-            } else {
-                return nil
             }
+            return result
         }
 
         return nil
