@@ -29,6 +29,7 @@ let package = Package(
             path: "Sources/Swift"),
         .testTarget(
             name: "FomaTests",
-            dependencies: ["Foma"]),
+            dependencies: ["Foma"],
+            exclude: ["FomaTests.fomabin"])
     ]
 )

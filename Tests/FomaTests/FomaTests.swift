@@ -2,277 +2,49 @@ import XCTest
 @testable import Foma
 
 final class FomaTests: XCTestCase {
+    
+    // The following line of code is meant to obtain the absolute file path to the file FomaTests.fomabin
+    //     In Swift, #file gives the path to this Swift file.
+    //     We get the path to this file, then replace the suffix from .swift to .fomabin
+    //     This assumes that this file and the fomabin file are in the same directory, which they should be.
+    let testFile = URL(fileURLWithPath: #file.replacingOccurrences(of: ".swift", with: ".fomabin")).path // FileManager.default.currentDirectoryPath
+    
+    func applyUp(surfaceForm: String, underlyingForm: [String], using testFile: String) {
+        if let fst = FST(fromBinary: testFile) {
+            if let result = fst.applyUp(surfaceForm) {
+                XCTAssertEqual(result.input, surfaceForm)
+                XCTAssertEqual(result.outputs.count, underlyingForm.count)
+                XCTAssertEqual(result.outputs, underlyingForm)
+            } else {
+                XCTFail("applyUp failed for \(surfaceForm)")
+            }
+        } else {
+            XCTFail("Failed to read binary file \(testFile)")
+        }
+    }
+
     func testFomaVersion() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
         XCTAssertEqual(Foma.version, "0.9.18alpha")
     }
-
-    func testFomaReadBinaryFile() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-            if let result = fst.applyUp("qikmiq") {
-                XCTAssertEqual(result.input, "qikmiq")
-                XCTAssertEqual(result.outputs, ["qikmigh(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed")
-            }
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-
     
-    func testAfsengaq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-            
-            if let result = fst.applyUp("afsengaq") {
-                XCTAssertEqual(result.input, "afsengaq")
-                XCTAssertEqual(result.outputs, ["afsengagh*(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for afsengaq")
-            }
-            
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
+    func testAakaq()          { applyUp(surfaceForm: "aakaq",          underlyingForm: ["aakagh*(N)^[Abs.Sg]", "aag(V)^@~–(g)kagh(V→N)^[Abs.Sg]"], using: testFile) }
+    func testAfsengaq()       { applyUp(surfaceForm: "afsengaq",       underlyingForm: ["afsengagh*(N)^[Abs.Sg]"], using: testFile) }
+    func testAghnaghaq()      { applyUp(surfaceForm: "aghnaghaq",      underlyingForm: ["aghnaghagh*(N)^[Abs.Sg]"], using: testFile) }
+    func testEltughaq()       { applyUp(surfaceForm: "eltughaq",       underlyingForm: ["eltughagh*(N)^[Abs.Sg]"], using: testFile) }
+    func testNaliq()          { applyUp(surfaceForm: "naliq",          underlyingForm: ["naligh(WH)^[Abs.Sg]"], using: testFile) }
+    func testNeghtuq()        { applyUp(surfaceForm: "neghtuq",        underlyingForm: ["negh(V)^[Ind.Intr]^[3Sg]"], using: testFile) }
+    func testNengyuq()        { applyUp(surfaceForm: "nengyuq",        underlyingForm: ["nengyugh(N)^[Abs.Sg]", "nengyugh*(N)^[Abs.Sg]"], using: testFile) }
+    func testNuziq()          { applyUp(surfaceForm: "nuziq",          underlyingForm: ["nuzigh(N)^[Abs.Sg]"], using: testFile) }
+    func testPagungha()       { applyUp(surfaceForm: "pagungha",       underlyingForm: ["pagugh(V)^@~f–negh(V→N)^[Abs.3SgPoss.Sg]"], using: testFile) }
+    func testPagunghaghmeng() { applyUp(surfaceForm: "pagunghaghmeng", underlyingForm: ["pagunghagh*(N)^[Abl_Mod.Sg]", "pagunghagh*(N)^[Rel.4DuPoss.Pl]", "pagunghagh*(N)^[Rel.4DuPoss.Sg]", "pagunghagh*(N)^[Rel.4PlPoss.Pl]", "pagunghagh*(N)^[Rel.4PlPoss.Sg]"], using: testFile) }
+    func testPagunghaq()      { applyUp(surfaceForm: "pagunghaq",      underlyingForm: ["pagunghagh*(N)^[Abs.Sg]"], using: testFile) }
+    func testQikmiq()         { applyUp(surfaceForm: "qikmiq",         underlyingForm: ["qikmigh(N)^[Abs.Sg]"], using: testFile) }
+    func testTakestaaghhaq()  { applyUp(surfaceForm: "takestaaghhaq",  underlyingForm: ["takestaaghhagh*(N)^[Abs.Sg]", "takestaagh(N)^–ghhagh*(N→N)^[Abs.Sg]"], using: testFile) }
+    func testTukuq()          { applyUp(surfaceForm: "tukuq",          underlyingForm: ["tukugh(N)^[Abs.Sg]", "tukugh*(N)^[Abs.Sg]"], using: testFile) }
+    func testUyughaq()        { applyUp(surfaceForm: "uyughaq",        underlyingForm: ["uyughagh*(N)^[Abs.Sg]"], using: testFile) }
 
-    func testNeghtuq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("neghtuq") {
-                XCTAssertEqual(result.input, "neghtuq")
-                XCTAssertEqual(result.outputs, ["negh(V)^[Ind.Intr]^[3Sg]"])
-            } else {
-                XCTFail("applyUp failed for neghtuq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-    
-    func testPagungha() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("pagungha") {
-                XCTAssertEqual(result.input, "pagungha")
-                XCTAssertEqual(result.outputs, ["pagugh(V)^@~f–negh(V→N)^[Abs.3SgPoss.Sg]"])
-            } else {
-                XCTFail("applyUp failed for pagungha")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-    
-    func testNengyuq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("nengyuq") {
-                XCTAssertEqual(result.input, "nengyuq")
-                XCTAssertEqual(result.outputs.count, 2)
-                XCTAssertEqual(result.outputs, ["nengyugh(N)^[Abs.Sg]", "nengyugh*(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for nengyuq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-    
-    func testEltughaq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("eltughaq") {
-                XCTAssertEqual(result.input, "eltughaq")
-                XCTAssertEqual(result.outputs.count, 1)
-                XCTAssertEqual(result.outputs, ["eltughagh*(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for eltughaq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-
-    func testUyughaq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            let word = "uyughaq"
-            
-            if let result = fst.applyUp(word) {
-                XCTAssertEqual(result.input, word)
-                XCTAssertEqual(result.outputs.count, 1)
-                XCTAssertEqual(result.outputs, ["uyughagh*(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for \(word)")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-    
-    func testNaliq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            let word = "naliq"
-            
-            if let result = fst.applyUp(word) {
-                XCTAssertEqual(result.input, word)
-                XCTAssertEqual(result.outputs.count, 1)
-                XCTAssertEqual(result.outputs, ["naligh(WH)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for \(word)")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-
-    
-    func testNuziq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            let word = "nuziq"
-            
-            if let result = fst.applyUp(word) {
-                XCTAssertEqual(result.input, word)
-                XCTAssertEqual(result.outputs.count, 1)
-                XCTAssertEqual(result.outputs, ["nuzigh(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for \(word)")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-    
-    func testAakaq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("aakaq") {
-                XCTAssertEqual(result.input, "aakaq")
-                XCTAssertEqual(result.outputs.count, 2)
-                XCTAssertEqual(result.outputs, ["aakagh*(N)^[Abs.Sg]", "aag(V)^@~–(g)kagh(V→N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for aakaq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-
-    func testTukuq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("tukuq") {
-                XCTAssertEqual(result.input, "tukuq")
-                XCTAssertEqual(result.outputs.count, 2)
-                XCTAssertEqual(result.outputs, ["tukugh(N)^[Abs.Sg]", "tukugh*(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for tukuq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-    
-    
-    
-    func testAghnaghaq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("aghnaghaq") {
-                XCTAssertEqual(result.input, "aghnaghaq")
-                XCTAssertEqual(result.outputs.count, 1)
-                XCTAssertEqual(result.outputs, ["aghnaghagh*(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for aghnaghaq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
- 
-    
-    func testTakestaaghhaq() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("takestaaghhaq") {
-                XCTAssertEqual(result.input, "takestaaghhaq")
-                XCTAssertEqual(result.outputs.count, 2)
-                XCTAssertEqual(result.outputs, ["takestaaghhagh*(N)^[Abs.Sg]", "takestaagh(N)^–ghhagh*(N→N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for takestaaghhaq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
- 
-
-    func testPagunghaq() {
-        let testFile = "/Users/lanes/finite_state_morphology/pagunghaq.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-
-            if let result = fst.applyUp("pagunghaq") {
-                XCTAssertEqual(result.input, "pagunghaq")
-                XCTAssertEqual(result.outputs, ["pagunghagh*(N)^[Abs.Sg]"])
-            } else {
-                XCTFail("applyUp failed for pagunghaq")
-            }
-
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
-   
-    
-    func testPagunghaghmeng() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
-        if let fst = FST(fromBinary: testFile) {
-            
-            if let result = fst.applyUp("pagunghaghmeng") {
-                XCTAssertEqual(result.input, "pagunghaghmeng")
-                XCTAssertEqual(result.outputs.count, 5)
-            } else {
-                XCTFail("applyUp failed for pagunghaghmeng")
-            }
-            
-        } else {
-            XCTFail("Failed to read binary file \(testFile)")
-        }
-    }
- 
-
-    
     func testSampleSentence() {
-        let testFile = "/Users/lanes/finite_state_morphology/l2s.fomabin"
+        
         if let fst = FST(fromBinary: testFile) {
             
             if let result = fst.applyUp("afsengaq") {
@@ -303,6 +75,23 @@ final class FomaTests: XCTestCase {
  
     
     static var allTests = [
-        ("testFomaVersion", testFomaVersion),
+        ("testFomaVersion",    testFomaVersion),
+        ("testAakaq",          testAakaq),
+        ("testAfsengaq",       testAfsengaq),
+        ("testAghnaghaq",      testAghnaghaq),
+        ("testEltughaq",       testEltughaq),
+        ("testNaliq",          testNaliq),
+        ("testNeghtuq",        testNeghtuq),
+        ("testNengyuq",        testNengyuq),
+        ("testNuziq",          testNuziq),
+        ("testPagungha",       testPagungha),
+        ("testPagunghaghmeng", testPagunghaghmeng),
+        ("testPagunghaq",      testPagunghaq),
+        ("testQikmiq",         testQikmiq),
+        ("testTakestaaghhaq",  testTakestaaghhaq),
+        ("testTukuq",          testTukuq),
+        ("testUyughaq",        testUyughaq),
+        ("testSampleSentence", testSampleSentence),
+
     ]
 }
